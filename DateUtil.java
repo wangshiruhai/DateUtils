@@ -23,6 +23,22 @@ public class DateUtil {
     public static final String SS = "ss";
     public static final String SIMPLE_YYYY_MM_DD = "yyyyMMdd";
     
+    
+    public static Date toDate(String date, String format) throws ParseException {
+        if(date == null || date == "") throw new NullPointerException("input date is null or empty!");
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        return sdf.parse(date);
+    }
+
+    public static String toStr(Date date, String format) {
+        DateFormat dateFormat = new SimpleDateFormat(format);
+        return dateFormat.format(date);
+    }
+
+    public static Timestamp toTimestamp(Date date){
+        return new Timestamp(date.getTime());
+    }
+
     /**
      * 将String类型的日期转换成TimeStamp</br>
      * Tip：日期参数的格式类型，必须和format参数的格式一致，否则抛出ParseException
@@ -32,42 +48,13 @@ public class DateUtil {
      * @throws ParseException 
      */
     public static Timestamp toTimestamp(String date,String format) throws ParseException{
-        
-        if(date == null || date == "") throw new NullPointerException("input date is null or empty!");
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-        Date targetDate = sdf.parse(date);
-        Timestamp timestamp = new Timestamp(targetDate.getTime());
-        return timestamp;
+        return toTimestamp(toDate(date, format));
     }
     
-    public  static String  toStr(String date, String original_format,String transform_format) {
-        Date d = null;
-        DateFormat simple = new SimpleDateFormat(original_format);
-        DateFormat df =  new SimpleDateFormat(transform_format);
-        try {
-            d = simple.parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return df.format(d).toString();
+    public static String toStr(String date, String original_format,String transform_format) throws ParseException{
+        return toStr(toDate(date, original_format), transform_format);
     }
     
-    public  static String  toStr(Date date, String format) {
-        DateFormat dateFormat = new SimpleDateFormat(format);
-        return dateFormat.format(date);
-    }
-    
-    public static Date toDate(String date, String format) throws ParseException {
-        if(date == null || date == "") throw new NullPointerException("input date is null or empty!");
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-        return sdf.parse(date);
-    }
-    
-    public static Timestamp toTimestamp(Date date){
-        return new Timestamp(date.getTime());
-    }
-    
-   
     /**
      * 将Timestamp类型的日期根据输入的format的格式转换成Sting类型
      * @param timestamp  日期
@@ -83,8 +70,6 @@ public class DateUtil {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
        return sdf.format(date);
     }
-    
-   
 
     public static Timestamp getBeginTimeOfDay(Date calBeginDate) throws ParseException {
         String date = dateToStr(calBeginDate, YYYY_MM_DD);
@@ -153,7 +138,6 @@ public class DateUtil {
         }
         return lastDate.getTime();
     }
-    
 
     public static int getDaysOfMonth(Date date){
         Calendar c= Calendar.getInstance();
@@ -171,5 +155,4 @@ public class DateUtil {
         System.out.println(end);
         System.out.println(getDaysOfMonth(begin)+"");
     }
-
 }
